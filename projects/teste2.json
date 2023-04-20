@@ -1,0 +1,68 @@
+{
+    "nodes": [
+        {
+          "id": "1",
+          "name": "Start (1)",
+          "val": 1,
+          "color":"white"
+        },
+        {
+          "id": "2",
+          "name": "(2)",
+          "val": 1
+        },
+        {
+            "id": "3",
+            "name": "(3)",
+            "val": 1
+          },
+          {
+            "id": "4",
+            "name": "End (4)",
+            "val": 1,
+            "color": "green"
+          }
+    ],
+    "links": [
+        {
+            "source": "1",
+            "target": "3",
+            "name": "[a]"
+        },
+        {
+            "source": "1",
+            "target": "2",
+            "name": "[b]"
+        },
+        {
+            "source": "2",
+            "target": "3",
+            "name": "[a]"
+        },
+        {
+            "source": "2",
+            "target": "4",
+            "name": "[b]"
+        },
+        {
+            "source": "3",
+            "target": "4",
+            "name": "[a]"
+        },
+        {
+            "source": "3",
+            "target": "2",
+            "name": "[b]"
+        },
+        {
+            "source": "id4",
+            "target": "id4",
+            "name": "[a, b]"
+        },
+        {
+            "source": "id4",
+            "target": "id4",
+            "name": "[a, b]"
+        }
+    ]
+}

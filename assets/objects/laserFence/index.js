@@ -3,25 +3,25 @@ import * as THREE from 'three';
 
 class Fence extends THREE.Mesh {
     constructor() { 
-        super(new THREE.BoxGeometry(0.5, 2, 0.3), new THREE.MeshLambertMaterial({color:"gray"}));
+        super(new THREE.BoxGeometry(0.5, 2, 0.15), new THREE.MeshPhongMaterial({color:"white"}));
     }
 };
 
 class FenceTorus extends THREE.Mesh {
     constructor() { 
-        super(new THREE.TorusGeometry(0.15, 0.05 , 10, 20), new THREE.MeshLambertMaterial({color:"gray"})); 
+        super(new THREE.TorusGeometry(0.15, 0.05 , 10, 20), new THREE.MeshPhongMaterial({color:"black"})); 
     }
 };
 
 class FenceBase extends THREE.Mesh {
     constructor() { 
-        super(new THREE.BoxGeometry(0.5, 2, 0.1), new THREE.MeshLambertMaterial({color:"gray"}));
+        super(new THREE.BoxGeometry(0.5, 2, 0.1), new THREE.MeshPhongMaterial({color:"white"}));
     }
 };
 
 class Laser extends THREE.Mesh {
     constructor(color) { 
-        super(new THREE.CylinderGeometry(0.1, 0.1, 2, 64, 64), new THREE.MeshLambertMaterial({emissive:color, color:color, emissiveIntensity:1, transparent:true, opacity: 0.7}));
+        super(new THREE.CylinderGeometry(0.1, 0.1, 2, 64, 64), new THREE.MeshPhongMaterial({emissive:color, color:color, emissiveIntensity:1, transparent:true, opacity: 0.7}));
     }
 };
 
@@ -41,10 +41,10 @@ class LaserFence extends THREE.Object3D {
         
         // fences
         let laserFence1 = new Fence;
-        laserFence1.position.set(0, 0, -1)
+        laserFence1.position.set(0, 0, -0.93)
         laserFence1.castShadow = true;
         let laserFence2 = new Fence;
-        laserFence2.position.set(0, 0, 1)
+        laserFence2.position.set(0, 0, 0.93)
         laserFence2.castShadow = true;
 
         // fence torus

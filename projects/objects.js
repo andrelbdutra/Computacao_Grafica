@@ -12,10 +12,12 @@ import {initRenderer,
         onWindowResize, 
         getFilename} from "../libs/util/util.js";
 import LaserFence from '../assets/objects/laserFence/index.js';
+import SpikeTrap from '../assets/objects/spikeTrap/index.js';
+import { Scene } from '../build/three.module.js';
 
 let scene, renderer, camera, orbit, light;
 scene = new THREE.Scene();    // Create main scene
-light = initDefaultSpotlight(scene, new THREE.Vector3(2, 3, 2)); // Use default light
+light = initDefaultSpotlight(scene, new THREE.Vector3(3, 4, 3)); // Use default light
 renderer = initRenderer();    // View function in util/utils
    renderer.setClearColor("rgb(30, 30, 42)");
 camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -28,6 +30,9 @@ orbit = new OrbitControls( camera, renderer.domElement ); // Enable mouse rotati
 let lightSphere = createSphere(0.1, 10, 10);
   lightSphere.position.copy(light.position);
 scene.add(lightSphere);
+
+scene.environment = new THREE.PMREMGenerator(renderer)
+
 
 // Listen window size changes
 window.addEventListener( 'resize', function(){onWindowResize(camera, renderer)}, false );
@@ -49,6 +54,7 @@ scene.add( axesHelper );
 // Assets manager --------------------------------
 let assetManager = {
    // Properties ---------------------------------
+   spikeTrap: null,
    laserFence: null,
    plane: null,
    L200: null,
@@ -73,8 +79,8 @@ let assetManager = {
    },   
 
    hideAll : function() {
-      this.laserFence.visible = this.orca.visible = this.woodenGoose.visible = this.chair.visible = 
-      this.plane.visible = this.L200.visible = this.tank.visible = false;
+      this.spikeTrap.visible = this.laserFence.visible  = false
+      
    }
 }
 const sceneProperties = {
@@ -97,17 +103,19 @@ function changeLaserStateStatus(index, status)
     }
 }
 
+// LASER FENCE
 let setLaserStatesInterval;
 let setLaserStates;
 let laserState;
 
 let laserFences = [];
 let laserFence = new LaserFence();
-scene.add(laserFence);
 var objLF = normalizeAndRescale(laserFence, 1);
 assetManager['laserFence'] = objLF;
-assetManager['laserFence'].translateY(0.437);
+assetManager['laserFence'].translateY(0.500);
+scene.add(assetManager['laserFence']);
 laserFences.push(objLF)
+laserFence.visible = false;
 
 laserState = 0;
 setLaserStates = () => {
@@ -130,6 +138,53 @@ setLaserStatesInterval = setInterval(() => {
   laserState = (laserState + 1) % 2;
   setLaserStates();
 },1000);
+
+
+// SPIKE TRAP
+let spikeTrap = new SpikeTrap;
+var objLF1 = normalizeAndRescale(spikeTrap, 0.7);
+assetManager['spikeTrap'] = objLF1;
+scene.add(assetManager['spikeTrap']);
+
+let requestID
+let alpha = 0.01
+let alpha2 = 0.1
+
+function activateTrap(){
+  if(assetManager['spikeTrap'].spikes[4].position.y.toFixed(1) < 1.5)
+  {
+    alpha2 += 0.05;
+    assetManager['spikeTrap'].spikes.forEach(spike => spike.position.lerp(new THREE.Vector3(spike.position.x, 1.5, spike.position.z), alpha2))
+      requestID = requestAnimationFrame(activateTrap);
+  }
+  else
+  {
+    cancelAnimationFrame(requestID);
+    alpha2 = 0.1
+  }
+}
+
+function deactivateTrap(){
+  if(assetManager['spikeTrap'].spikes[4].position.y.toFixed(1) > -1.6)
+  {
+    alpha += 0.001;
+    alpha2 += 0.01;
+    assetManager['spikeTrap'].spikes.forEach(spike => spike.position.lerp(new THREE.Vector3(spike.position.x, -1.6, spike.position.z), alpha2))
+    
+    //assetManager['spikeTrap'].spikes[0].position.lerp(new THREE.Vector3(0, -1.5, 0), alpha)
+    requestID = requestAnimationFrame(deactivateTrap);
+  }
+  else
+  {
+    cancelAnimationFrame(requestID);
+    alpha = 0.01
+    alpha2 = 0.1
+  }
+}
+
+
+let gridHelper = new THREE.GridHelper(5,5, "black","black")
+scene.add(gridHelper);
 
 
 //loadOBJFile('../assets/objects/', 'plane', 3.5, 0, false);
@@ -239,23 +294,36 @@ function buildInterface()
   var controls = new function ()
   {
     this.viewAxes = false;
-    this.laserActive = true;
-    this.type = "laserFence";
+    this.activeLaser = true;
+    this.type = "spikeTrap";
     this.onChooseObject = function()
     {
-      //assetManager.hideAll();
-      //console.log(assetManager['laserFence'])
+      assetManager.hideAll();
+      console.log(assetManager[this.type])
       assetManager[this.type].visible = true;   
     };
     this.onViewAxes = function(){
       axesHelper.visible = this.viewAxes;
     };
-    this.changeLaserActive = function(){
-      if(this.laserActive == false){
-        assetManager[this.type].setNotVisible();
+    this.changeActive = function(){
+          console.log(this.activeLaser)
+      if(assetManager[this.type] == assetManager["laserFence"]){
+        if(this.activeLaser == false){
+          assetManager[this.type].setNotVisible();
+        }
+        else 
+        assetManager[this.type].setVisible();
+        }
+      if(assetManager[this.type] == assetManager["spikeTrap"]){
+        if(this.activeLaser == false){
+          cancelAnimationFrame(requestID);
+          deactivateTrap()
+        }
+        else{
+          cancelAnimationFrame(requestID);
+          activateTrap()
+        }
       }
-      else 
-      assetManager[this.type].setVisible();
     }
   };
 
@@ -263,15 +331,15 @@ function buildInterface()
   var gui = new GUI();
   gui.add(controls, 'type',
   //['laserFence', 'orca', 'woodenGoose', 'chair', 'L200', 'tank'])
-  ['laserFence'])
+  ['spikeTrap', 'laserFence'])
      .name("Change Object")
      .onChange(function(e) { controls.onChooseObject(); });
   gui.add(controls, 'viewAxes', false)
      .name("View Axes")
      .onChange(function(e) { controls.onViewAxes() });
-  gui.add(controls, 'laserActive', true)
+  gui.add(controls, 'activeLaser', true)
      .name("active")
-     .onChange(function(e) { controls.changeLaserActive() });
+     .onChange(function(e) { controls.changeActive() });
 }
 
 function render()
