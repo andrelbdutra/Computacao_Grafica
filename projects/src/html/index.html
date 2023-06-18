@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <title>Página Inicial - ELoS (Versão de Teste)</title>
+        <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
+        <link rel="stylesheet" href="../scss/homepage/styles.scss">
+    </head>
+    <body>
+        <div class="page">
+            <img src="../img/homepage/page.png" alt="">
+        
+          <div class="robot">
+              <img src="../img/homepage/robo.gif">
+          </div>
+          <div id="lvl1btn" class="bottonlvl1">
+              <a href="./level1/index.html">
+                  <img src="../img/homepage/bottonlvl1.png">
+              </a>
+          </div>
+          <div class="bottonlvl2">
+              <a href="./level2/index.html">
+                  <img src="../img/homepage/bottonlvl2.png">
+              </a>
+          </div>
+          <div class="virtus">
+              <a href="https://avrgroup.github.io/virtus/">
+                  <img src="../img/homepage/virtus-brand.png" height="100px" wight="100px">
+              </a>
+          </div>
+          <button id="myBtn"></button>
+          <div id="myModal" class="modal">      
+            <div class="modal-content">
+              <span class="close">&times;</span>
+              <video id="myVideo" width="100%" controls>
+                <source src="../video/homepage/video.mp4" type="video/mp4">
+                Your browser does not support HTML video.
+              </video>
+            </div>
+          </div>
+        </div>
+
+      <script>
+            var vid = document.getElementById("myVideo"); 
+            var modal = document.getElementById("myModal");
+            var btn = document.getElementById("myBtn");
+            var span = document.getElementsByClassName("close")[0];
+            btn.onclick = function() {
+              modal.style.display = "block";
+              vid.play(); 
+            }
+            span.onclick = function() {
+              modal.style.display = "none";
+              vid.pause();
+            }            
+            window.onclick = function(event) {
+              if (event.target == modal) 
+              {                
+                modal.style.display = "none";
+                vid.pause();
+              }
+            }
+      </script>
+    </body>
+</html>

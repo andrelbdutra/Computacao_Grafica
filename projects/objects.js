@@ -13,6 +13,7 @@ import {initRenderer,
         getFilename} from "../libs/util/util.js";
 import LaserFence from '../assets/objects/laserFence/index.js';
 import SpikeTrap from '../assets/objects/spikeTrap/index.js';
+import CranckDoor from '../assets/objects/cranckDoor/index.js';
 import { Scene } from '../build/three.module.js';
 
 let scene, renderer, camera, orbit, light;
@@ -56,6 +57,7 @@ let assetManager = {
    // Properties ---------------------------------
    spikeTrap: null,
    laserFence: null,
+   cranckDoor: null,
    plane: null,
    L200: null,
    tank: null,
@@ -79,7 +81,7 @@ let assetManager = {
    },   
 
    hideAll : function() {
-      this.spikeTrap.visible = this.laserFence.visible  = false
+      this.spikeTrap.visible = this.laserFence.visible = this.cranckDoor.visible  = false
       
    }
 }
@@ -87,6 +89,11 @@ const sceneProperties = {
   cancelExecution: false,
   phase: 0,
   executing: false
+}
+
+export function degreeToRadians(angle)
+{
+    return angle * (Math.PI / 180);
 }
 
 function changeLaserStateStatus(index, status)
@@ -145,6 +152,7 @@ let spikeTrap = new SpikeTrap;
 var objLF1 = normalizeAndRescale(spikeTrap, 0.7);
 assetManager['spikeTrap'] = objLF1;
 scene.add(assetManager['spikeTrap']);
+spikeTrap.visible = false;
 
 let requestID
 let alpha = 0.01
@@ -180,6 +188,51 @@ function deactivateTrap(){
     alpha = 0.01
     alpha2 = 0.1
   }
+}
+
+// CRANCK DOOR
+let cranckDoor = new CranckDoor();
+var objLF2 = normalizeAndRescale(cranckDoor, 1);
+assetManager['cranckDoor'] = objLF2;
+assetManager['cranckDoor'].translateY(0.500);
+scene.add(assetManager['cranckDoor']);
+//cranckDoor.visible = false;
+
+let requestID2;
+function turnCranck(mode){
+  let angleRotated = 0;
+    let totalRotation = 1500;
+    cancelAnimationFrame(requestID2);
+    function rotate()
+    {
+        if(angleRotated < totalRotation)
+        {
+            if(mode == 0)
+            {
+              assetManager['cranckDoor'].rotateCranckZ(degreeToRadians(-5));
+              assetManager['cranckDoor'].lerpDoor(0, -2)
+              if(assetManager['cranckDoor'].getDoorY().toFixed(1) == -2){
+                return;
+              }
+            }
+            else
+            {
+              assetManager['cranckDoor'].rotateCranckZ(degreeToRadians(5));
+              assetManager['cranckDoor'].lerpDoor(1, 0)
+              if(assetManager['cranckDoor'].getDoorY().toFixed(1) == 0){
+                return;
+              }
+            }
+            angleRotated += 3;
+            requestID2 = requestAnimationFrame(rotate);
+        }
+        else
+        {
+            cancelAnimationFrame(requestID2);
+        }
+    }
+
+    requestID2 = requestAnimationFrame(rotate);
 }
 
 
@@ -295,7 +348,7 @@ function buildInterface()
   {
     this.viewAxes = false;
     this.activeLaser = true;
-    this.type = "spikeTrap";
+    this.type = "cranckDoor";
     this.onChooseObject = function()
     {
       assetManager.hideAll();
@@ -306,7 +359,6 @@ function buildInterface()
       axesHelper.visible = this.viewAxes;
     };
     this.changeActive = function(){
-          console.log(this.activeLaser)
       if(assetManager[this.type] == assetManager["laserFence"]){
         if(this.activeLaser == false){
           assetManager[this.type].setNotVisible();
@@ -324,6 +376,16 @@ function buildInterface()
           activateTrap()
         }
       }
+      if(assetManager[this.type] == assetManager["cranckDoor"]){
+        if(this.activeLaser == false){
+          cancelAnimationFrame(requestID);
+          turnCranck(0)
+        }
+        else{
+          cancelAnimationFrame(requestID);
+          turnCranck(1)
+        }
+      }
     }
   };
 
@@ -331,13 +393,13 @@ function buildInterface()
   var gui = new GUI();
   gui.add(controls, 'type',
   //['laserFence', 'orca', 'woodenGoose', 'chair', 'L200', 'tank'])
-  ['spikeTrap', 'laserFence'])
+  ['cranckDoor', 'spikeTrap', 'laserFence'])
      .name("Change Object")
      .onChange(function(e) { controls.onChooseObject(); });
   gui.add(controls, 'viewAxes', false)
      .name("View Axes")
      .onChange(function(e) { controls.onViewAxes() });
-  gui.add(controls, 'activeLaser', true)
+  gui.add(controls, 'activeLaser', false)
      .name("active")
      .onChange(function(e) { controls.changeActive() });
 }

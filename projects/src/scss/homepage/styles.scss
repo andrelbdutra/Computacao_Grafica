@@ -1,0 +1,95 @@
+body {
+    background-color: #325a8f;
+  }
+  
+  .page {
+    position: relative;
+  }
+  
+  .robot {
+    position: absolute;
+    left: 800px;
+    top: 0px;
+  }
+  
+  .bottonlvl1 {
+    position:absolute;
+    top: 533px;
+    left: 67px;
+  }
+  
+  .bottonlvl2 {
+    position:absolute;
+    top: 682px;
+    left: 220px;
+  }
+  
+  .virtus {
+    position:absolute;
+    right: 20px;
+    top:15px;
+  }
+  
+  #myBtn {
+    position: absolute;
+    width:185px;
+    height:185px;
+    left: 486px;
+    top: 132px;
+    background-color: transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+  }
+  
+  .modal {
+    display: none; 
+    position: absolute; 
+    z-index: 2;
+    left: 150px;
+    top: 100px;
+    width: 70%; 
+    height: 70%;             
+  }
+  
+  .modal-content {
+    position: absolute;
+    margin: auto;
+    padding: 0;
+    width: 75%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.6s
+  }
+  
+  @-webkit-keyframes animatetop {
+  from {top:-300px; opacity:0} 
+  to {top:0; opacity:1}
+  }
+  
+  @keyframes animatetop {
+  from {top:-300px; opacity:0}
+  to {top:0; opacity:1}
+  }
+  
+  .close {
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  .modal-body {
+    padding: 2px 16px;
+  }
+  

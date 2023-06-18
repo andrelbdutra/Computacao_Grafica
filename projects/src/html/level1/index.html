@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+        <link rel="stylesheet" href="styles.scss">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+        <title>ELoS (Versão de Teste) - Nível 1</title>
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12 col-md-6 vh-50 vh-md-100">
+                    <canvas id="phaseView" style="width: 100%; height: 100%;">
+
+                    </canvas>
+                    <div class="position-absolute top-0 start-0 ms-3">
+                        <h2 id="phaseTitle" class="bg-warning mb-0">Nível 1 - Fase x de X</h2>
+                        <p id="phaseObjective" class="bg-info mt-0 mb-0">Faça algo</p>
+                        <h2 id="winMessage" class="bg-success mt-0 invisible">Fase Concluída</h2>
+                        <button id="advanceBtn" type="button" class="btn btn-primary invisible">Avançar</button>
+                    </div>
+                    <div class="position-absolute bottom-50 bottom-md-0 start-0 ms-3">
+                        <h3 id="timer" class="text-white">Tempo:</h3>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-6">
+                    <div class="row">
+                        <div class="col-12 order-last order-md-first py-1">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title">Funções Disponíveis:</h5>
+                                </div>
+                                <div class="collapse" id="collapseFunctions">
+                                    <div class="card-body">
+                                        <code>
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <span><b>Ações:</span>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    <button id="andarFrente" class="btn">andarFrente(quantidade)</button><br>
+                                                    andarTras(quantidade)<br>
+                                                </div>
+                                                <div class="col-4">
+                                                    girarEsquerda()<br>
+                                                    girarDireita()<br>
+                                                </div>
+                                                <div class="col-4">
+                                                    darMeiaVolta()<br>
+                                                    coletarCristal()<br>
+                                                </div>
+                                            </div>
+                                        </code>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <button id="collapseBtn" class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFunctions" aria-expanded="false" aria-controls="collapseFunctions">
+                                        Abrir
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 order-first order-md-2 py-1">
+                            <div class="card min-vh-md-30 max-vh-25 max-vh-md-40">
+                                <div class="card-header">
+                                    <h5 class="card-title">Digite seu código aqui:</h5>
+                                </div>
+                                <div id="editorArea" class="card-body overflow-auto">
+
+                                </div>
+                                <div class="card-footer">
+                                    <button id="execBtn" type="button" class="btn btn-primary">Executar</button>
+                                    <button id="resetBtn" type="button" class="btn btn-secondary">Reset</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 order-2 order-md-last py-1">
+                            <div class="card max-vh-24 max-vh-md-40">
+                                <div class="card-header">
+                                    <h5 class="card-title">Console:</h5>
+                                </div>
+                                <div class="card-body overflow-auto">
+                                    <code id="consoleArea">
+
+                                    </code>
+                                </div>
+                                <div class="card-footer">
+                                    <button id="clsConsole" type="button" class="btn btn-secondary">Limpar Console</button>
+                                </div>
+                            </div>
+                            <button id="finishEarlier" type="button" class="btn btn-danger ms-3 my-2">Finalizar Atividade</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="logModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="logModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="logModalLabel">Para finalizar o Nível 1, informe:</h5>
+                        </div>
+                        <div class="modal-body">
+                            <form id="dataLog">
+                                <div class="mb-2">
+                                    <label for="name" class="form-label"><b>Nome:</b></label>
+                                    <input type="text" name="name" id="name" class="form-control">
+                                </div>
+                                <div class="mb-2">
+                                    <label for="age" class="form-label"><b>Idade:</b></label>
+                                    <input type="number" name="age" id="age" class="form-control" min="1" step="1">
+                                </div>
+                                <div class="mb-2">
+                                    <label for="gender" class="form-label"><b>Gênero:</b></label><br>
+                                    <input type="radio" name="gender" value="Feminino" class="form-check-input"> Feminino
+                                    <input type="radio" name="gender" value="Masculino" class="form-check-input"> Masculino
+                                </div>
+                                <div class="mb-2">
+                                    <label for="prog-exp" class="form-label"><b>Qual sua experiência com programação?</b></label><br>
+                                    <input type="radio" name="prog-exp" value="Este foi meu primeiro contato." class="form-check-input"> Este foi meu primeiro contato.<br>
+                                    <input type="radio" name="prog-exp" value="Tive uma pequena experiência no colégio." class="form-check-input"> Tive uma pequena experiência no colégio.<br>
+                                    <input type="radio" name="prog-exp" value="Já programei pequenos projetos." class="form-check-input"> Já programei pequenos projetos.<br>
+                                    <input type="radio" name="prog-exp" value="Sou um programador experiente." class="form-check-input"> Sou um programador experiente.
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button id="subBtn" type="button" class="btn btn-primary">Avançar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>        
+    </body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+    <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@<version>/build/three.module.js",
+                    "three/addons/": "https://unpkg.com/three@<version>/examples/jsm/"
+                    }
+                }
+            </script>
+    <script type="module" src="phases.js"></script>
+</html>

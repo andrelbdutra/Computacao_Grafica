@@ -1,0 +1,45 @@
+@import "~bootstrap/scss/bootstrap";
+
+$position-values: (
+    0: 0,
+    50: 50%,
+    100: 100%
+);
+
+$utilities: (
+    "viewport-height": (
+        property: height,
+        responsive: true,
+        class: vh,
+        values: (
+            100: 99vh,
+            50: 50vh,
+        )
+    ),
+    "min-viewport-height": (
+        property: min-height,
+        responsive: true,
+        class: min-vh,
+        values: (
+            30:30vh
+        )
+    ),
+    "max-viewport-height": (
+        property: max-height,
+        responsive: true,
+        class: max-vh,
+        values: (
+            25:25vh,
+            24:24vh,
+            40:40vh,
+            39:39vh
+        )
+    ),
+    "bottom": (
+        property: bottom,
+        responsive: true,
+        values: $position-values
+    )
+);
+
+@import "~bootstrap/scss/bootstrap";
